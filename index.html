@@ -11,18 +11,19 @@
   <link rel="canonical" href="{block:IndexPage}{BlogURL}{/block:IndexPage}{block:PermalinkPage}{Permalink}{/block:PermalinkPage}">
   <link rel="alternate" type="application/rss+xml" href="{RSS}">
   {block:Hidden}
-    <!--
+    <meta name="text:Twitter Username" content=""/>
 
-      Custom theme options in the 'Hidden' block will not show when viewing the source code.
-      https://www.tumblr.com/docs/en/custom_themes#theme-options
+    <meta name="font:Nav Bar" content="" />
 
-     <meta name="text:Twitter Username" content=""/>
-
-     -->
+    <meta name="text:Home Headline" content="" />
+    <meta name="text:Home Subtitle" content="" />
+    <meta name="text:Home CTA" content="" />
+    <meta name="text:Home CTA URL" content="" />
   {/block:Hidden}
   <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css" type="text/css" media="all"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://adrienp.github.io/adrien-tumblr/css/index.css" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="https://localhost:4443/css/index.css" crossorigin="anonymous"> -->
+  <!-- <link rel="stylesheet" href="https://adrienp.github.io/adrien-tumblr/css/index.css" crossorigin="anonymous"> -->
   <style type="text/css">
     /*Tumblr Global Appearance */
     body {
@@ -37,16 +38,79 @@
       color:{AccentColor};
     }
 
-    header {
+    .jumbotron {
       {block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}
+    }
+
+    .jumbotron h1 {
+      font-family: {TitleFont};
+      font-weight: {TitleFontWeight};
+    }
+
+    #top-nav {
+      font-family: {font:Nav Bar};
+    }
+
+    .navbar-brand {
+      {block:IfNavTitle}font-family: {font:Nav Title};{/block:IfNavTitle}
     }
 
     {CustomCSS}
   </style>
+  <style type="text/css">
+    html, body {
+      height: 100%;
+      font-size: 16px;
+    }
+
+    .jumbotron {
+      background-size: cover;
+      background-position: center;
+      height: 56.25vw;
+      max-height: 80%;
+      min-height: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #top-nav {
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    #top-nav.transparent {
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    /*#top-nav a {
+      transition: color 0.2s;
+    }
+
+    #top-nav.transparent a {
+      color: #eee;
+      text-shadow: black 0 0 1px;
+    }
+
+    #top-nav.transparent a:hover {
+      color: #fff;
+    }*/
+
+    {block:IfNotHomeHeadline}
+    #top-nav .navbar-brand {
+      transition: opacity 0.2s;
+      opacity: 1;
+    }
+
+    #top-nav.transparent .navbar-brand {
+      opacity: 0;
+    }
+    {/block:IfNotHomeHeadline}
+  </style>
 </head>
 <body>
 
-  <nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-default navbar-fixed-top transparent" id="top-nav">
     <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="{BlogURL}">{Title}</a>
@@ -71,9 +135,17 @@
 
   <header class="jumbotron">
     <div class="container">
-      {block:ShowTitle}<h1>{Title}</h1>{/block:ShowTitle}
-      {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
-      <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+      {block:IfHomeHeadline}<h1>{text:Home Headline}</h1>{/block:IfHomeHeadline}
+      {block:IfNotHomeHeadline}
+        {block:ShowTitle}<h1>{Title}</h1>{/block:ShowTitle}
+      {/block:IfNotHomeHeadline}
+
+      {block:IfHomeSubtitle}<p class="description">{text:Home Subtitle}</p>{/block:IfHomeSubtitle}
+      {block:IfNotHomeSubtitle}
+        {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
+      {/block:IfNotHomeSubtitle}
+
+      {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA}
     </div>
   </header>
 
@@ -98,8 +170,9 @@
     </form>
 
   </header> -->
+  
 
-  <main role="main" class="content">
+  <main role="main" class="content container">
 
     {block:SearchPage}
     <div class="result">
@@ -247,5 +320,24 @@
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    var $ = jQuery;
+    var $window = $(window);
+    var $nav = $('.navbar');
+
+    function setupScroll() {
+      var header_height = $('.jumbotron').height();
+
+      $window.on('resize', function() {
+        header_height = $('.jumbotron').height();
+      });
+
+      $window.on('scroll', function() {
+        $nav.toggleClass('transparent', $window.scrollTop() < header_height / 2);
+      });
+    }
+
+    setupScroll();
+  </script>
 </body>
 </html>
