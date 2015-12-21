@@ -13,12 +13,14 @@
   {block:Hidden}
     <meta name="text:Twitter Username" content=""/>
 
-    <meta name="font:Nav Bar" content="" />
+    <meta name="font:Nav Font" content="" />
 
     <meta name="text:Home Headline" content="" />
     <meta name="text:Home Subtitle" content="" />
     <meta name="text:Home CTA" content="" />
     <meta name="text:Home CTA URL" content="" />
+
+    <meta name="color:Secondary link color" content="#777" />
   {/block:Hidden}
   <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css" type="text/css" media="all"> -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -38,21 +40,18 @@
       color:{AccentColor};
     }
 
-    .jumbotron {
+    #header-jumbotron {
       {block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}
+      color: {TitleColor};
     }
 
-    .jumbotron h1 {
+    #header-jumbotron h1 {
       font-family: {TitleFont};
       font-weight: {TitleFontWeight};
     }
 
     #top-nav {
-      font-family: {font:Nav Bar};
-    }
-
-    .navbar-brand {
-      {block:IfNavTitle}font-family: {font:Nav Title};{/block:IfNavTitle}
+      font-family: {font:Nav font};
     }
 
     {CustomCSS}
@@ -63,9 +62,9 @@
       font-size: 16px;
     }
 
-    .jumbotron {
+    #header-jumbotron {
       background-size: cover;
-      background-position: center;
+      background-position: center 50%;
       height: 56.25vw;
       max-height: 80%;
       min-height: 50%;
@@ -74,38 +73,73 @@
       justify-content: center;
     }
 
+    @media (max-width: 767px) {
+      #header-jumbotron .container {
+        margin-left: 15px;
+      }
+    }
+
     #top-nav {
       transition: background-color 0.2s, border-color 0.2s;
+      background-color: rgba(248, 248, 248, 0.95);
     }
 
-    #top-nav.transparent {
-      background-color: transparent;
-      border-color: transparent;
+    @media (min-width: 768px) {
+      #top-nav.transparent {
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      {block:IfNotHomeHeadline}
+      #top-nav .navbar-brand {
+        transition: opacity 0.2s;
+        opacity: 1;
+      }
+
+      #top-nav.transparent .navbar-brand {
+        opacity: 0;
+      }
+      {/block:IfNotHomeHeadline}
     }
 
-    /*#top-nav a {
-      transition: color 0.2s;
+    .caption {
+      margin-top: 8px;
     }
 
-    #top-nav.transparent a {
-      color: #eee;
-      text-shadow: black 0 0 1px;
+    .post-tags a {
+      color: #aaa;
+      margin-right: 8px;
+      white-space: nowrap;
     }
 
-    #top-nav.transparent a:hover {
-      color: #fff;
-    }*/
-
-    {block:IfNotHomeHeadline}
-    #top-nav .navbar-brand {
-      transition: opacity 0.2s;
-      opacity: 1;
+    .post-meta {
+      display: flex;
+    }
+    .post-meta > *:not(:last-child) {
+      margin-right: 12px;
+    }
+    .post-meta .spacer {
+      flex: 1;
+    }
+    .post-meta a {
+      color: #aaa;
     }
 
-    #top-nav.transparent .navbar-brand {
-      opacity: 0;
+    a.read_more {
+      text-decoration: underline;
     }
-    {/block:IfNotHomeHeadline}
+
+    .post img, .post iframe {
+      display: block;
+      margin-right: auto;
+      margin-left: auto;
+      border-radius: 6px;
+      max-width: 100%;
+    }
+
+    .footer {
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -133,7 +167,7 @@
     </div>
   </nav>
 
-  <header class="jumbotron">
+  <header class="jumbotron" id="header-jumbotron">
     <div class="container">
       {block:IfHomeHeadline}<h1>{text:Home Headline}</h1>{/block:IfHomeHeadline}
       {block:IfNotHomeHeadline}
@@ -170,7 +204,7 @@
     </form>
 
   </header> -->
-  
+
 
   <main role="main" class="content container">
 
@@ -183,13 +217,8 @@
 
     {block:TagPage}<div class="result"><p>{lang:TagResultCount posts tagged Tag 3}</p></div>{/block:TagPage}
 
-    {block:Posts}
+    {block:Posts inlineMediaWidth="700"}
     <article class="post {PostType} {TagsAsClasses}">
-      {block:Date}
-        {block:NewDayDate}<p>{DayOfWeek}, {Month} {DayOfMonth}, {Year}</p>{/block:NewDayDate}
-        {block:SameDayDate}<p>{DayOfWeek}, {Month} {DayOfMonth}, {Year}</p>{/block:SameDayDate}
-      {/block:Date}
-
       {block:Text}
         {block:Title}<h2><a href="{Permalink}">{Title}</a></h2>{/block:Title}
         {block:Body}
@@ -222,7 +251,7 @@
 
       {block:Photo}
         <figure class="{block:HighRes}high-res{/block:HighRes}{block:Caption} with-caption{/block:Caption}" data-photo-width="{PhotoWidth-HighRes}">
-          {LinkOpenTag}<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}" width="{PhotoWidth-HighRes}" height="{PhotoHeight-HighRes}">{LinkCloseTag}
+          {LinkOpenTag}<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">{LinkCloseTag}
           {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
         </figure>
       {/block:Photo}
@@ -286,12 +315,27 @@
       {/block:Answer}
 
       {block:IndexPage}
-        {LikeButton color="grey"}
-        {ReblogButton color="grey"}
-        <p><a href="{Permalink}" class="permalink">{lang:Permalink}</a></p>
+        {block:HasTags}
+          <p class="post-tags">
+              {block:Tags}
+                <a href="{TagURL}">#{Tag}</a>
+              {/block:Tags}
+          </p>
+        {/block:HasTags}
+        <div class="post-meta">
+          {block:NoteCount}
+            <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
+          {/block:NoteCount}
+          <a href="{Permalink}">{TimeAgo}</a>
+          <span class="spacer"></span>
+          {LikeButton color="grey"}
+          {ReblogButton color="grey"}
+        </div>
+        <!-- <p><a href="{Permalink}" class="permalink">{lang:Permalink}</a></p> -->
       {/block:IndexPage}
 
     </article>
+    <hr>
     {/block:Posts}
 
     {block:PermalinkPagination}
@@ -314,26 +358,38 @@
     </div>
     {/block:Pagination}
   </main>
-  <footer class="footer">
+  <footer class="footer text-muted text-center">
     <small>{block:ShowTitle}{Title} {/block:ShowTitle}&copy; {CopyrightYears}</small>
   </footer>
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script type="text/javascript">
+    var HEADER_PARALLAX = 0.25;
+
     var $ = jQuery;
     var $window = $(window);
     var $nav = $('.navbar');
+    var $header = $('#header-jumbotron');
 
     function setupScroll() {
-      var header_height = $('.jumbotron').height();
+      var header_height = $header.height();
 
       $window.on('resize', function() {
-        header_height = $('.jumbotron').height();
+        header_height = $header.height();
       });
 
+      function scrollHandler() {
+        var scrollTop = $window.scrollTop();
+        $nav.toggleClass('transparent', scrollTop < header_height / 2);
+
+        if (scrollTop < header_height) {
+          $header.css('background-position-y', 'calc(50% + ' + (scrollTop * HEADER_PARALLAX) + 'px)');
+        }
+      }
+
       $window.on('scroll', function() {
-        $nav.toggleClass('transparent', $window.scrollTop() < header_height / 2);
+        requestAnimationFrame(scrollHandler);
       });
     }
 
