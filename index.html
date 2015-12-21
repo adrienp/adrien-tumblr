@@ -84,28 +84,32 @@
     }
 
     #header-jumbotron {
-      height: 56.25vw;
       display: flex;
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
 
-      max-height: 30%;
-      min-height: 20%;
+      height: 15vw;
+      max-height: 80%;
+      min-height: 200px;
 
       {block:IndexPage}
-        max-height: 80%;
-        min-height: 50%;
+        height: 45vw;
       {/block:IndexPage}
-
       {block:TagPage}
-        max-height: 30%;
-        min-height: 20%;
+        height: 15vw;
       {/block:TagPage}
       {block:SearchPage}
-        max-height: 30%;
-        min-height: 20%;
+        height: 15vw;
       {/block:SearchPage}
+    }
+
+    @media (max-width: 767px) {
+      #header-jumbotron {
+        margin-top: 51px;
+        min-height: 100px;
+        max-height: none;
+      }
     }
 
     #header-jumbotron .container {
@@ -130,12 +134,22 @@
       }
     }
 
-    #top-nav {
-      transition: background-color 0.2s, border-color 0.2s;
-      background-color: rgba(248, 248, 248, 0.95);
+    #top-nav a {
+      color: {TitleColor};
+    }
+    #top-nav .icon-bar {
+      background-color: {TitleColor};
+    }
+    #top-nav a:hover {
+      text-decoration: underline;
     }
 
     @media (min-width: 768px) {
+      #top-nav {
+        transition: background-color 0.2s, border-color 0.2s;
+        background-color: rgba(248, 248, 248, 0.95);
+      }
+
       #top-nav.transparent {
         background-color: transparent;
         border-color: transparent;
@@ -161,9 +175,9 @@
         {block:SearchPage}
           opacity: 1;
         {/block:SearchPage}
-        {block:PermalinkPage}{block:Posts}{block:Text}
+        {block:PermalinkPage}
           opacity: 1;
-        {/block:Text}{/block:Posts}{/block:PermalinkPage}
+        {/block:PermalinkPage}
       }
     }
 
@@ -198,8 +212,11 @@
       display: block;
       margin-right: auto;
       margin-left: auto;
-      border-radius: 6px;
       max-width: 100%;
+    }
+
+    .post img {
+      border-radius: 6px;
     }
 
     .footer {
@@ -239,22 +256,22 @@
 
   <header class="jumbotron" id="header-jumbotron">
     <div class="jumbotron-background"></div>
-    <div class="container {block:TagPage}hidden{/block:TagPage} {block:PermalinkPage}{block:Posts}{block:Text}hidden{/block:Text}{/block:Posts}{/block:PermalinkPage}">
+    <div class="container {block:TagPage}hidden{/block:TagPage} {block:PermalinkPage}hidden{/block:PermalinkPage}">
       {block:ShowTitle}<h1><a href="{BlogURL}">{Title}</a></h1>{/block:ShowTitle}
       {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
       <!-- {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA} -->
     </div>
     {block:TagPage}
       <div class="container tag-page">
-        <h1 class="text-capitalize">{Tag}</h1>
+        <h1 class="text-capitalize"><a href="{TagURL}">{Tag}</a></h1>
         <p class="description">{lang:Posts tagged Tag 3}</p>{/block:Description}
       </div>
     {/block:TagPage}
-    {block:PermalinkPage}{block:Posts}{block:Text}
+    {block:PermalinkPage}
       <div class="container text-page">
-        <h1 class="text-center"><a href="{Permalink}">{Title}</a></h1>
+        <h1 class="text-center"><a href="{Permalink}">{block:PostSummary}{PostSummary}{/block:PostSummary}</a></h1>
       </div>
-    {/block:Text}{/block:Posts}{/block:PermalinkPage}
+    {/block:PermalinkPage}
   </header>
 
   <main role="main" class="content container">
@@ -442,15 +459,16 @@
     var $header_background = $header.find('.jumbotron-background');
 
     function setupScroll() {
-      var header_height = $header.height();
+      var header_height = $header.innerHeight();
+      var nav_height = $nav.innerHeight();
 
       $window.on('resize', function() {
-        header_height = $header.height();
+        header_height = $header.innerHeight();
       });
 
       function scrollHandler() {
         var scrollTop = $window.scrollTop();
-        $nav.toggleClass('transparent', scrollTop < header_height * HEADER_NAV_FADE);
+        $nav.toggleClass('transparent', scrollTop < header_height - nav_height);
 
         if (scrollTop < header_height) {
           $header_background.css('transform', 'translate3d(0px,' + Math.floor(scrollTop * HEADER_PARALLAX) + 'px,0px)');
