@@ -41,8 +41,20 @@
     }
 
     #header-jumbotron {
-      {block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}
       color: {TitleColor};
+      position: relative;
+    }
+
+    #header-jumbotron .jumbotron-background {
+      {block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-size: cover;
+      background-position: center;
+      transform: translate3d(0px,0px,0px);
     }
 
     #header-jumbotron h1 {
@@ -63,14 +75,17 @@
     }
 
     #header-jumbotron {
-      background-size: cover;
-      background-position: center 50%;
       height: 56.25vw;
       max-height: 80%;
       min-height: 50%;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow: hidden;
+    }
+
+    #header-jumbotron .container {
+      z-index: 1;
     }
 
     @media (max-width: 767px) {
@@ -168,6 +183,7 @@
   </nav>
 
   <header class="jumbotron" id="header-jumbotron">
+    <div class="jumbotron-background"></div>
     <div class="container">
       {block:IfHomeHeadline}<h1>{text:Home Headline}</h1>{/block:IfHomeHeadline}
       {block:IfNotHomeHeadline}
@@ -371,6 +387,7 @@
     var $window = $(window);
     var $nav = $('.navbar');
     var $header = $('#header-jumbotron');
+    var $header_background = $header.find('.jumbotron-background');
 
     function setupScroll() {
       var header_height = $header.height();
@@ -384,7 +401,7 @@
         $nav.toggleClass('transparent', scrollTop < header_height / 2);
 
         if (scrollTop < header_height) {
-          $header.css('background-position-y', 'calc(50% + ' + (scrollTop * HEADER_PARALLAX) + 'px)');
+          $header_background.css('transform', 'translate3d(0px,' + Math.floor(scrollTop * HEADER_PARALLAX) + 'px,0px)');
         }
       }
 
