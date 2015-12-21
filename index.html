@@ -46,13 +46,13 @@
     }
 
     #header-jumbotron .jumbotron-background {
-      background: url('{HeaderImage}');
+      background: url('{HeaderImage}') center / cover;
 
       {block:PermalinkPage}
         background: linear-gradient(
           rgba(0, 0, 0, 0.5),
           rgba(0, 0, 0, 0.5)
-        ), url('{HeaderImage}');
+        ), url('{HeaderImage}') center / cover;
       {/block:PermalinkPage}
 
       /*{block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}*/
@@ -61,8 +61,6 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-size: cover;
-      background-position: center;
       transform: translate3d(0px,0px,0px);
     }
 
@@ -108,7 +106,15 @@
       #header-jumbotron {
         margin-top: 51px;
         min-height: 100px;
-        max-height: none;
+        max-height: 200px;
+        color: {BackgroundColor};
+      }
+
+      #header-jumbotron .jumbotron-background {
+        background: linear-gradient(
+          rgba(0, 0, 0, 0.5),
+          rgba(0, 0, 0, 0.5)
+        ), url('{HeaderImage}') center / cover;
       }
     }
 
