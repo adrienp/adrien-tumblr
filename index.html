@@ -1,31 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+  {MobileAppHeaders}
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{block:PostSummary}{PostSummary} &mdash; {/block:PostSummary}{Title}</title>
-  {block:Description}<meta name="description" content="{MetaDescription}">{/block:Description}
-  <link rel="apple-touch-icon" href="{PortraitURL-128}">
+  <title>{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
+  {block:Description}
+  <meta name="description" content="{MetaDescription}">
+  {/block:Description}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="shortcut icon" href="{Favicon}">
-  <link rel="canonical" href="{block:IndexPage}{BlogURL}{/block:IndexPage}{block:PermalinkPage}{Permalink}{/block:PermalinkPage}">
+  <link rel="apple-touch-icon-precomposed" href="{PortraitURL-128}">
   <link rel="alternate" type="application/rss+xml" href="{RSS}">
+
   {block:Hidden}
     <meta name="text:Twitter Username" content=""/>
-
     <meta name="font:Nav Font" content="" />
-
-    <meta name="text:Home Headline" content="" />
-    <meta name="text:Home Subtitle" content="" />
-    <meta name="text:Home CTA" content="" />
-    <meta name="text:Home CTA URL" content="" />
-
-    <meta name="color:Secondary link color" content="#777" />
   {/block:Hidden}
-  <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css" type="text/css" media="all"> -->
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="https://localhost:4443/css/index.css" crossorigin="anonymous"> -->
-  <!-- <link rel="stylesheet" href="https://adrienp.github.io/adrien-tumblr/css/index.css" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <style type="text/css">
     /*Tumblr Global Appearance */
     body {
@@ -35,18 +29,33 @@
     h1 > a {
       color:{TitleColor};
     }
+    h1 > a, h1 > a:hover {
+      color:{TitleColor};
+    }
 
-    a {
+    a, a:hover {
       color:{AccentColor};
     }
 
     #header-jumbotron {
       color: {TitleColor};
+      {block:PermalinkPage}
+        color: {BackgroundColor};
+      {/block:PermalinkPage}
       position: relative;
     }
 
     #header-jumbotron .jumbotron-background {
-      {block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}
+      background: url('{HeaderImage}');
+
+      {block:PermalinkPage}
+        background: linear-gradient(
+          rgba(0, 0, 0, 0.5),
+          rgba(0, 0, 0, 0.5)
+        ), url('{HeaderImage}');
+      {/block:PermalinkPage}
+
+      /*{block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}*/
       position: absolute;
       top: 0;
       bottom: 0;
@@ -76,16 +85,43 @@
 
     #header-jumbotron {
       height: 56.25vw;
-      max-height: 80%;
-      min-height: 50%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
+
+      max-height: 30%;
+      min-height: 20%;
+
+      {block:IndexPage}
+        max-height: 80%;
+        min-height: 50%;
+      {/block:IndexPage}
+
+      {block:TagPage}
+        max-height: 30%;
+        min-height: 20%;
+      {/block:TagPage}
+      {block:SearchPage}
+        max-height: 30%;
+        min-height: 20%;
+      {/block:SearchPage}
     }
 
     #header-jumbotron .container {
       z-index: 1;
+    }
+
+    #header-jumbotron a {
+      color: inherit;
+    }
+
+    #header-jumbotron a.tag {
+      text-decoration: underline;
+    }
+
+    #header-jumbotron a.tag:before {
+      content: '#';
     }
 
     @media (max-width: 767px) {
@@ -105,7 +141,12 @@
         border-color: transparent;
       }
 
-      {block:IfNotHomeHeadline}
+      #top-nav.transparent a {
+        {block:PermalinkPage}
+          color: {BackgroundColor};
+        {/block:PermalinkPage}
+      }
+
       #top-nav .navbar-brand {
         transition: opacity 0.2s;
         opacity: 1;
@@ -113,8 +154,17 @@
 
       #top-nav.transparent .navbar-brand {
         opacity: 0;
+
+        {block:TagPage}
+          opacity: 1;
+        {/block:TagPage}
+        {block:SearchPage}
+          opacity: 1;
+        {/block:SearchPage}
+        {block:PermalinkPage}{block:Posts}{block:Text}
+          opacity: 1;
+        {/block:Text}{/block:Posts}{/block:PermalinkPage}
       }
-      {/block:IfNotHomeHeadline}
     }
 
     .caption {
@@ -155,9 +205,13 @@
     .footer {
       padding: 20px;
     }
+
+    #pagination-nav {
+      text-align: center;
+    }
   </style>
 </head>
-<body>
+<body class="{block:IndexPage}index-page{/block:IndexPage} {block:PermalinkPage}permalink-page{/block:PermalinkPage} {block:SearchPage}search-page {block:NoSearchResults}no-results{/block:NoSearchResults}{/block:SearchPage} {block:TagPage}tag-page {Tag}{/block:TagPage}">
 
   <nav class="navbar navbar-default navbar-fixed-top transparent" id="top-nav">
     <div class="container-fluid">
@@ -172,6 +226,7 @@
       </div>
       <div class="collapse navbar-collapse navbar-right" id="nav-links">
         <ul class="nav navbar-nav">
+          <li><a href="{BlogURL}">{lang:Home}</a></li>
           {block:HasPages}
             {block:Pages}
               <li><a href="{URL}">{Label}</a></li>
@@ -184,153 +239,135 @@
 
   <header class="jumbotron" id="header-jumbotron">
     <div class="jumbotron-background"></div>
-    <div class="container">
-      {block:IfHomeHeadline}<h1>{text:Home Headline}</h1>{/block:IfHomeHeadline}
-      {block:IfNotHomeHeadline}
-        {block:ShowTitle}<h1>{Title}</h1>{/block:ShowTitle}
-      {/block:IfNotHomeHeadline}
-
-      {block:IfHomeSubtitle}<p class="description">{text:Home Subtitle}</p>{/block:IfHomeSubtitle}
-      {block:IfNotHomeSubtitle}
-        {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
-      {/block:IfNotHomeSubtitle}
-
-      {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA}
+    <div class="container {block:TagPage}hidden{/block:TagPage} {block:PermalinkPage}{block:Posts}{block:Text}hidden{/block:Text}{/block:Posts}{/block:PermalinkPage}">
+      {block:ShowTitle}<h1><a href="{BlogURL}">{Title}</a></h1>{/block:ShowTitle}
+      {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
+      <!-- {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA} -->
     </div>
+    {block:TagPage}
+      <div class="container tag-page">
+        <h1 class="text-capitalize">{Tag}</h1>
+        <p class="description">{lang:Posts tagged Tag 3}</p>{/block:Description}
+      </div>
+    {/block:TagPage}
+    {block:PermalinkPage}{block:Posts}{block:Text}
+      <div class="container text-page">
+        <h1 class="text-center"><a href="{Permalink}">{Title}</a></h1>
+      </div>
+    {/block:Text}{/block:Posts}{/block:PermalinkPage}
   </header>
 
-  <!-- <header role="banner" class="header">
-
-    {block:ShowTitle}<h1 id="logo"><a href="/">{Title}</a></h1>{/block:ShowTitle}
-    {block:ShowDescription}{block:Description}<div class="description">{Description}</div>{/block:Description}{/block:ShowDescription}
-    {block:ShowHeaderImage}<img src="{HeaderImage}">{/block:ShowHeaderImage}
-    {block:ShowAvatar}<img src="{PortraitURL-128}">{/block:ShowAvatar}
-
-    <nav role="navigation">
-      <ul>
-        {block:HasPages}{block:Pages}<li><a href="{URL}">{Label}</a></li>{/block:Pages}{/block:HasPages}
-        <li><a href="/archive">{lang:Archive}</a></li>
-        {block:AskEnabled}<li><a href="/ask">{AskLabel}</a></li>{/block:AskEnabled}
-      </ul>
-    </nav>
-
-    <form id="search" action="/search" method="get">
-      <input role="textbox" type="search" placeholder="{lang:Search}" name="q" value="{SearchQuery}">
-      <input role="button" type="submit" value="{lang:Search}">
-    </form>
-
-  </header> -->
-
-
   <main role="main" class="content container">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
 
-    {block:SearchPage}
-    <div class="result">
-      <p>{lang:Found SearchResultCount results for SearchQuery 2}</p>
-      {block:NoSearchResults}<p>{lang:No results for SearchQuery 2}</p>{/block:NoSearchResults}
-    </div>
-    {/block:SearchPage}
+      {block:SearchPage}
+      <div class="result">
+        <p>{lang:Found SearchResultCount results for SearchQuery 2}</p>
+        {block:NoSearchResults}<p>{lang:No results for SearchQuery 2}</p>{/block:NoSearchResults}
+      </div>
+      {/block:SearchPage}
 
-    {block:TagPage}<div class="result"><p>{lang:TagResultCount posts tagged Tag 3}</p></div>{/block:TagPage}
+      {block:TagPage}<div class="result"><p>{lang:TagResultCount posts tagged Tag 3}</p></div>{/block:TagPage}
 
-    {block:Posts inlineMediaWidth="700"}
-    <article class="post {PostType} {TagsAsClasses}">
-      {block:Text}
-        {block:Title}<h2><a href="{Permalink}">{Title}</a></h2>{/block:Title}
-        {block:Body}
-        <div class="body-text">
-          {Body}
-        </div>
-        {/block:Body}
-      {/block:Text}
+      {block:Posts inlineMediaWidth="700"}
+      <article class="post {PostType} {TagsAsClasses}">
+        {block:Text}
+          {block:IndexPage}
+            {block:Title}<h2><a href="{Permalink}">{Title}</a></h2>{/block:Title}
+          {/block:IndexPage}
+          {block:Body}
+          <div class="body-text">
+            {Body}
+          </div>
+          {/block:Body}
+        {/block:Text}
 
-      {block:Quote}
-        <blockquote class="words {Length}">&#8220;{Quote}&#8221;</blockquote>
-        {block:Source}<p class="source">&mdash; {Source}</p>{/block:Source}
-      {/block:Quote}
+        {block:Quote}
+          <blockquote class="words {Length}">&#8220;{Quote}&#8221;</blockquote>
+          {block:Source}<p class="source">&mdash; {Source}</p>{/block:Source}
+        {/block:Quote}
 
-      {block:Link}
-        <h2><a href="{URL}" {Target}>{Name}</a></h2>
-        {block:Description}<div class="caption">{Description}</div>{/block:Description}
-      {/block:Link}
+        {block:Link}
+          <h2><a href="{URL}" {Target}>{Name}</a></h2>
+          {block:Description}<div class="caption">{Description}</div>{/block:Description}
+        {/block:Link}
 
-      {block:Audio}
-        {block:AlbumArt}<img src="{AlbumArtURL}" alt="">{/block:AlbumArt}
-        <div class="audio-player">
-          {block:AudioEmbed}
-            {AudioEmbed color="white"}
-          {/block:AudioEmbed}
-          {block:AudioPlayer}{AudioPlayerBlack}{/block:AudioPlayer}
-        </div>
-        {block:Caption}<div class="caption">{Caption}</div>{/block:Caption}
-      {/block:Audio}
-
-      {block:Photo}
-        <figure class="{block:HighRes}high-res{/block:HighRes}{block:Caption} with-caption{/block:Caption}" data-photo-width="{PhotoWidth-HighRes}">
-          {LinkOpenTag}<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">{LinkCloseTag}
-          {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
-        </figure>
-      {/block:Photo}
-
-      {block:Photoset}
-        <figure{block:Caption} class="with-caption"{/block:Caption}>
-          {block:Photos}
-          <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+        {block:Audio}
+          {block:AlbumArt}<img src="{AlbumArtURL}" alt="">{/block:AlbumArt}
+          <div class="audio-player">
+            {block:AudioEmbed}
+              {AudioEmbed color="white"}
+            {/block:AudioEmbed}
+            {block:AudioPlayer}{AudioPlayerBlack}{/block:AudioPlayer}
+          </div>
           {block:Caption}<div class="caption">{Caption}</div>{/block:Caption}
-          {/block:Photos}
-          {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
-        </figure>
-      {/block:Photoset}
+        {/block:Audio}
 
-      {block:Panorama}
-        <figure{block:Caption} class="with-caption"{/block:Caption}>
-          {LinkOpenTag}<img src="{PhotoURL-Panorama}" width="{PhotoWidth-Panorama}" height="{PhotoHeight-Panorama}" alt="{PhotoAlt}" />{LinkCloseTag}
-          {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
-        </figure>
-      {/block:Panorama}
+        {block:Photo}
+          <figure class="{block:HighRes}high-res{/block:HighRes}{block:Caption} with-caption{/block:Caption}" data-photo-width="{PhotoWidth-HighRes}">
+            {LinkOpenTag}<img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">{LinkCloseTag}
+            {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
+          </figure>
+        {/block:Photo}
 
-      {block:Video}
-        <figure{block:Caption} class="with-caption"{/block:Caption}>
-          <div class="video-player">
-              {Video-700}
-          </div>
-          {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
-        </figure>
-      {/block:Video}
+        {block:Photoset}
+          <figure{block:Caption} class="with-caption"{/block:Caption}>
+            {block:Photos}
+            <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"/>
+            {block:Caption}<div class="caption">{Caption}</div>{/block:Caption}
+            {/block:Photos}
+            {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
+          </figure>
+        {/block:Photoset}
 
-      {block:Chat}
-        {block:Title}<h2>{Title}</h2>{/block:Title}
-        <ul class="conversation">
-          {block:Lines}
-          <li class="line {Alt}">
-            {block:Label}<span class="person">{Label}</span>{/block:Label}
-            <span class="person-said">{Line}</span>
-          </li>
-          {/block:Lines}
-        </ul>
-      {/block:Chat}
+        {block:Panorama}
+          <figure{block:Caption} class="with-caption"{/block:Caption}>
+            {LinkOpenTag}<img src="{PhotoURL-Panorama}" width="{PhotoWidth-Panorama}" height="{PhotoHeight-Panorama}" alt="{PhotoAlt}" />{LinkCloseTag}
+            {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
+          </figure>
+        {/block:Panorama}
 
-      {block:Answer}
-        <section class="question">
-          <img src="{AskerPortraitURL-48}">
-          <div class="asker">{Asker} asked:</div>
-          <div class="asker-question">
-            {Question}
-          </div>
-        </section>
-        {block:Answerer}
-          <section class="answerer">
-            <img src="{AnswererPortraitURL-48}">
-            <p>{Answerer} answered:</p>
-            <div class="answerer-answer">
-              {Answer}
+        {block:Video}
+          <figure{block:Caption} class="with-caption"{/block:Caption}>
+            <div class="video-player">
+                {Video-700}
+            </div>
+            {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
+          </figure>
+        {/block:Video}
+
+        {block:Chat}
+          {block:Title}<h2>{Title}</h2>{/block:Title}
+          <ul class="conversation">
+            {block:Lines}
+            <li class="line {Alt}">
+              {block:Label}<span class="person">{Label}</span>{/block:Label}
+              <span class="person-said">{Line}</span>
+            </li>
+            {/block:Lines}
+          </ul>
+        {/block:Chat}
+
+        {block:Answer}
+          <section class="question">
+            <img src="{AskerPortraitURL-48}">
+            <div class="asker">{Asker} asked:</div>
+            <div class="asker-question">
+              {Question}
             </div>
           </section>
-        {/block:Answerer}
-        <div class="replies">{Replies}</div>
-      {/block:Answer}
+          {block:Answerer}
+            <section class="answerer">
+              <img src="{AnswererPortraitURL-48}">
+              <p>{Answerer} answered:</p>
+              <div class="answerer-answer">
+                {Answer}
+              </div>
+            </section>
+          {/block:Answerer}
+          <div class="replies">{Replies}</div>
+        {/block:Answer}
 
-      {block:IndexPage}
         {block:HasTags}
           <p class="post-tags">
               {block:Tags}
@@ -344,35 +381,49 @@
           {/block:NoteCount}
           <a href="{Permalink}">{TimeAgo}</a>
           <span class="spacer"></span>
+          <a href="{Permalink}" title="Permalink"><i class="fa fa-link"></i></a>
           {LikeButton color="grey"}
           {ReblogButton color="grey"}
         </div>
-        <!-- <p><a href="{Permalink}" class="permalink">{lang:Permalink}</a></p> -->
-      {/block:IndexPage}
 
-    </article>
-    <hr>
-    {/block:Posts}
+      </article>
+      <hr>
+      {/block:Posts}
 
-    {block:PermalinkPagination}
-    <div class="pagination">
-      {block:PreviousPost}<a class="prev"href="{PreviousPost}">{lang:Previous post}</a>{/block:PreviousPost}
-      {block:NextPost}<a class="next" href="{NextPost}">{lang:Next post}</a>{/block:NextPost}
+      {block:PermalinkPagination}
+      <nav>
+        <ul class="pager">
+          {block:PreviousPost}<li class="previous"><a href="{PreviousPost}"><span aria-hidden="true">&larr;</span> {lang:Previous post}</a></li>{/block:PreviousPost}
+          {block:NextPost}<li class="next"><a href="{NextPost}">{lang:Next post} <span aria-hidden="true">&rarr;</span></a></li>{/block:NextPost}
+        </ul>
+      </nav>
+      {/block:PermalinkPagination}
+
+      {block:Pagination}
+      <nav id="pagination-nav">
+        <ul class="pagination">
+          {block:PreviousPage}
+            <li>
+              <a href="{PreviousPage}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {/block:PreviousPage}
+          {block:JumpPagination length="5"}
+            {block:CurrentPage}<li class="active"><a href="{URL}">{PageNumber} <span class="sr-only">(current)</span></a></li>{/block:CurrentPage}
+            {block:JumpPage}<li><a href="{URL}">{PageNumber}</a></li>{/block:JumpPage}
+          {/block:JumpPagination}
+          {block:NextPage}
+            <li>
+              <a href="{NextPage}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {/block:NextPage}
+        </ul>
+      </nav>
+      {/block:Pagination}
     </div>
-    {/block:PermalinkPagination}
-
-    {block:Pagination}
-    <div class="pagination">
-      {block:PreviousPage}<a class="prev" href="{PreviousPage}">{lang:Previous}</a>{/block:PreviousPage}
-
-      {block:JumpPagination length="5"}
-        {block:CurrentPage}<span class="current-page">{PageNumber}</span>{/block:CurrentPage}
-        {block:JumpPage}<a class="jump-page" href="{URL}">{PageNumber}</a>{/block:JumpPage}
-      {/block:JumpPagination}
-
-      {block:NextPage}<a class="next" href="{NextPage}">{lang:Next}</a>{/block:NextPage}
-    </div>
-    {/block:Pagination}
   </main>
   <footer class="footer text-muted text-center">
     <small>{block:ShowTitle}{Title} {/block:ShowTitle}&copy; {CopyrightYears}</small>
@@ -382,6 +433,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script type="text/javascript">
     var HEADER_PARALLAX = 0.25;
+    var HEADER_NAV_FADE = 0.8;
 
     var $ = jQuery;
     var $window = $(window);
@@ -398,7 +450,7 @@
 
       function scrollHandler() {
         var scrollTop = $window.scrollTop();
-        $nav.toggleClass('transparent', scrollTop < header_height / 2);
+        $nav.toggleClass('transparent', scrollTop < header_height * HEADER_NAV_FADE);
 
         if (scrollTop < header_height) {
           $header_background.css('transform', 'translate3d(0px,' + Math.floor(scrollTop * HEADER_PARALLAX) + 'px,0px)');
@@ -411,6 +463,15 @@
     }
 
     setupScroll();
+
+    {block:Permalink}
+      var $hero_img = $('.post img.hero').length ? $('.post img.hero') : $('.post img');
+      var hero_src = $hero_img.prop('src');
+
+      if (hero_src) {
+        $header_background.css('background', "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url('" + hero_src + "') center / cover");
+      }
+    {/block:Permalink}
   </script>
 </body>
 </html>
