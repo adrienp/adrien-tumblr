@@ -214,7 +214,7 @@
       text-decoration: underline;
     }
 
-    .post img, .post iframe {
+    .post img {
       display: block;
       margin-right: auto;
       margin-left: auto;
@@ -223,6 +223,11 @@
 
     .post img {
       border-radius: 6px;
+      height: auto;
+    }
+
+    figure {
+      padding-bottom: 10px;
     }
 
     .footer {
@@ -231,6 +236,23 @@
 
     #pagination-nav {
       text-align: center;
+    }
+
+    .video-player {
+      position: relative;
+    }
+    .video-player:before {
+      display: block;
+      content: "";
+      width: 100%;
+      padding-top: 56.25%;
+    }
+    .video-player > iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -477,7 +499,7 @@
         $nav.toggleClass('transparent', scrollTop < header_height - nav_height);
 
         if (scrollTop < header_height) {
-          $header_background.css('transform', 'translate3d(0px,' + Math.floor(scrollTop * HEADER_PARALLAX) + 'px,0px)');
+          $header_background.css('transform', 'translate3d(0px,' + (scrollTop * HEADER_PARALLAX) + 'px,0px)');
         }
       }
 
