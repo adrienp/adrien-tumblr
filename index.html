@@ -21,41 +21,56 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <style type="text/css">
-    /*Tumblr Global Appearance */
-    body {
-      background:{BackgroundColor};
+    html, body {
+      height: 100%;
     }
 
-    h1 > a {
-      color:{TitleColor};
-    }
-    h1 > a, h1 > a:hover {
-      color:{TitleColor};
+    body {
+      background:{BackgroundColor};
+      font-size: 16px;
     }
 
     a, a:hover {
       color:{AccentColor};
     }
 
-    #header-jumbotron {
-      color: {TitleColor};
-      {block:PermalinkPage}
-        color: {BackgroundColor};
-      {/block:PermalinkPage}
-      position: relative;
+    h1 > a, h1 > a:hover {
+      color:{TitleColor};
     }
 
-    #header-jumbotron .jumbotron-background {
+    #page-header {
+      color: {BackgroundColor};
+      text-shadow: 0 0 2px rgba(0,0,0,.5);
+    }
+    #page-header.dim-background {
+      text-shadow: none;
+    }
+    #page-header a {
+      color: inherit;
+    }
+
+    #header-jumbotron {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+
+      height: 15vw;
+      max-height: 80vh;
+      min-height: 200px;
+    }
+
+    body.index-page:not(.tag-page):not(.search-page) #header-jumbotron {
+      height: 45vw;
+    }
+
+    #header-jumbotron, #header-jumbotron .jumbotron-background {
       background: url('{HeaderImage}') center / cover;
+    }
 
-      {block:PermalinkPage}
-        background: linear-gradient(
-          rgba(0, 0, 0, 0.5),
-          rgba(0, 0, 0, 0.5)
-        ), url('{HeaderImage}') center / cover;
-      {/block:PermalinkPage}
-
-      /*{block:ShowHeaderImage}background-image: url('{HeaderImage}');{/block:ShowHeaderImage}*/
+    #header-jumbotron .jumbotron-background, #header-jumbotron .jumbotron-dim-background {
+      display: none;
       position: absolute;
       top: 0;
       bottom: 0;
@@ -64,66 +79,51 @@
       transform: translate3d(0px,0px,0px);
     }
 
-    #header-jumbotron h1 {
-      font-family: {TitleFont};
-      font-weight: {TitleFontWeight};
+    #header-jumbotron .jumbotron-dim-background {
+      background: rgba(0, 0, 0, 0.5);
     }
 
-    #top-nav {
-      font-family: {font:Nav font};
+    .dim-background #header-jumbotron .jumbotron-dim-background {
+      display: block;
     }
 
-    {CustomCSS}
-  </style>
-  <style type="text/css">
-    html, body {
-      height: 100%;
-      font-size: 16px;
-    }
-
-    #header-jumbotron {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      overflow: hidden;
-
-      height: 15vw;
-      max-height: 80%;
-      min-height: 200px;
-
-      {block:IndexPage}
-        height: 45vw;
-      {/block:IndexPage}
-      {block:TagPage}
-        height: 15vw;
-      {/block:TagPage}
-      {block:SearchPage}
-        height: 15vw;
-      {/block:SearchPage}
-    }
-
+    /* Mobile: Light text, dim background, static nav margin */
     @media (max-width: 767px) {
+      /*#page-header {
+        color: {BackgroundColor};
+        text-shadow: none;
+      }*/
       #header-jumbotron {
         margin-top: 51px;
         min-height: 100px;
         max-height: 200px;
-        color: {BackgroundColor};
       }
+      /*#header-jumbotron .jumbotron-dim-background {
+        display: block;
+      }*/
+    }
 
+    /* Desktop: Parallax Header */
+    @media (min-width: 768px) {
       #header-jumbotron .jumbotron-background {
-        background: linear-gradient(
-          rgba(0, 0, 0, 0.5),
-          rgba(0, 0, 0, 0.5)
-        ), url('{HeaderImage}') center / cover;
+        display: block;
       }
     }
 
     #header-jumbotron .container {
-      z-index: 1;
+      z-index: 100;
     }
 
-    #header-jumbotron a {
-      color: inherit;
+    @media (max-width: 767px) {
+      #header-jumbotron .container {
+        margin-left: 15px;
+      }
+    }
+
+    #header-jumbotron h1 {
+      margin-top: 10px;
+      font-family: {TitleFont};
+      font-weight: {TitleFontWeight};
     }
 
     #header-jumbotron a.tag {
@@ -134,17 +134,14 @@
       content: '#';
     }
 
-    @media (max-width: 767px) {
-      #header-jumbotron .container {
-        margin-left: 15px;
-      }
+    #top-nav {
+      font-family: {font:Nav font};
+      color: {TitleColor};
+      text-shadow: none;
     }
 
-    #top-nav a {
-      color: {TitleColor};
-    }
     #top-nav .icon-bar {
-      background-color: {TitleColor};
+      background-color: currentColor;
     }
     #top-nav a:hover {
       text-decoration: underline;
@@ -157,14 +154,10 @@
       }
 
       #top-nav.transparent {
+        color: inherit;
+        text-shadow: inherit;
         background-color: transparent;
         border-color: transparent;
-      }
-
-      #top-nav.transparent a {
-        {block:PermalinkPage}
-          color: {BackgroundColor};
-        {/block:PermalinkPage}
       }
 
       #top-nav .navbar-brand {
@@ -172,18 +165,8 @@
         opacity: 1;
       }
 
-      #top-nav.transparent .navbar-brand {
+      body.index-page:not(.tag-page):not(.search-page) #top-nav.transparent .navbar-brand {
         opacity: 0;
-
-        {block:TagPage}
-          opacity: 1;
-        {/block:TagPage}
-        {block:SearchPage}
-          opacity: 1;
-        {/block:SearchPage}
-        {block:PermalinkPage}
-          opacity: 1;
-        {/block:PermalinkPage}
       }
     }
 
@@ -254,52 +237,57 @@
       width: 100%;
       height: 100%;
     }
+
+    {CustomCSS}
   </style>
 </head>
 <body class="{block:IndexPage}index-page{/block:IndexPage} {block:PermalinkPage}permalink-page{/block:PermalinkPage} {block:SearchPage}search-page {block:NoSearchResults}no-results{/block:NoSearchResults}{/block:SearchPage} {block:TagPage}tag-page {Tag}{/block:TagPage}">
 
-  <nav class="navbar navbar-default navbar-fixed-top transparent" id="top-nav">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="{BlogURL}">{Title}</a>
-        <button type="button" class="navbar-toggle collapsed navbar-right" data-toggle="collapse" data-target="#nav-links" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
+  <header id="page-header" class="{block:PermalinkPage}dim-background{/block:PermalinkPage}">
+    <nav class="navbar navbar-default navbar-fixed-top transparent" id="top-nav">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{BlogURL}">{Title}</a>
+          <button type="button" class="navbar-toggle collapsed navbar-right" data-toggle="collapse" data-target="#nav-links" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="nav-links">
+          <ul class="nav navbar-nav">
+            <li><a href="{BlogURL}">{lang:Home}</a></li>
+            {block:HasPages}
+              {block:Pages}
+                <li><a href="{URL}">{Label}</a></li>
+              {/block:Pages}
+            {/block:HasPages}
+          </ul>
+        </div>
       </div>
-      <div class="collapse navbar-collapse navbar-right" id="nav-links">
-        <ul class="nav navbar-nav">
-          <li><a href="{BlogURL}">{lang:Home}</a></li>
-          {block:HasPages}
-            {block:Pages}
-              <li><a href="{URL}">{Label}</a></li>
-            {/block:Pages}
-          {/block:HasPages}
-        </ul>
-      </div>
-    </div>
-  </nav>
+    </nav>
 
-  <header class="jumbotron" id="header-jumbotron">
-    <div class="jumbotron-background"></div>
-    <div class="container {block:TagPage}hidden{/block:TagPage} {block:PermalinkPage}hidden{/block:PermalinkPage}">
-      {block:ShowTitle}<h1><a href="{BlogURL}">{Title}</a></h1>{/block:ShowTitle}
-      {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
-      <!-- {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA} -->
+    <div class="jumbotron" id="header-jumbotron">
+      <div class="jumbotron-background"></div>
+      <div class="jumbotron-dim-background"></div>
+      <div class="container {block:TagPage}hidden{/block:TagPage} {block:PermalinkPage}hidden{/block:PermalinkPage}">
+        {block:ShowTitle}<h1><a href="{BlogURL}">{Title}</a></h1>{/block:ShowTitle}
+        {block:ShowDescription}{block:Description}<p class="description">{Description}</p>{/block:Description}{/block:ShowDescription}
+        <!-- {block:IfHomeCTA}<p><a class="btn btn-primary btn-lg" href="{text:Home CTA URL}" role="button">{text:Home CTA}</a></p>{/block:IfHomeCTA} -->
+      </div>
+      {block:TagPage}
+        <div class="container tag-page">
+          <h1 class="text-capitalize"><a href="{TagURL}">{Tag}</a></h1>
+          <p class="description">{lang:Posts tagged Tag 3}</p>{/block:Description}
+        </div>
+      {/block:TagPage}
+      {block:PermalinkPage}
+        <div class="container permalink-page">
+          <h1><a href="{Permalink}">{block:PostSummary}{PostSummary}{/block:PostSummary}</a></h1>
+        </div>
+      {/block:PermalinkPage}
     </div>
-    {block:TagPage}
-      <div class="container tag-page">
-        <h1 class="text-capitalize"><a href="{TagURL}">{Tag}</a></h1>
-        <p class="description">{lang:Posts tagged Tag 3}</p>{/block:Description}
-      </div>
-    {/block:TagPage}
-    {block:PermalinkPage}
-      <div class="container text-page">
-        <h1 class="text-center"><a href="{Permalink}">{block:PostSummary}{PostSummary}{/block:PostSummary}</a></h1>
-      </div>
-    {/block:PermalinkPage}
   </header>
 
   <main role="main" class="content container">
@@ -481,43 +469,49 @@
     var HEADER_NAV_FADE = 0.8;
 
     var $ = jQuery;
-    var $window = $(window);
-    var $nav = $('.navbar');
-    var $header = $('#header-jumbotron');
-    var $header_background = $header.find('.jumbotron-background');
 
-    function setupScroll() {
-      var header_height = $header.innerHeight();
-      var nav_height = $nav.innerHeight();
+    $(function() {
+      var $window = $(window);
+      var $nav = $('.navbar');
+      var $header = $('#header-jumbotron');
+      var $header_background = $header.find('.jumbotron-background');
 
-      $window.on('resize', function() {
-        header_height = $header.innerHeight();
-      });
+      function setupScroll() {
+        var header_height = $header.innerHeight();
+        var nav_height = $nav.innerHeight();
+        var do_parallax = $header_background.is(':visible');
 
-      function scrollHandler() {
-        var scrollTop = $window.scrollTop();
-        $nav.toggleClass('transparent', scrollTop < header_height - nav_height);
+        $window.on('resize', function() {
+          header_height = $header.innerHeight();
+          do_parallax = $header_background.is(':visible');
+        });
 
-        if (scrollTop < header_height) {
-          $header_background.css('transform', 'translate3d(0px,' + (scrollTop * HEADER_PARALLAX) + 'px,0px)');
+        function scrollHandler() {
+          var scrollTop = $window.scrollTop();
+          $nav.toggleClass('transparent', scrollTop < header_height - nav_height);
+
+          if (do_parallax && scrollTop < header_height) {
+            $header_background.css('transform', 'translate3d(0px,' + (scrollTop * HEADER_PARALLAX) + 'px,0px)');
+          }
         }
+
+        $window.on('scroll', function() {
+          requestAnimationFrame(scrollHandler);
+        });
+        scrollHandler();
       }
 
-      $window.on('scroll', function() {
-        requestAnimationFrame(scrollHandler);
-      });
-    }
+      setupScroll();
 
-    setupScroll();
+      {block:Permalink}
+        var $hero_img = $('.post img.hero').length ? $('.post img.hero') : $('.post img');
+        var hero_src = $hero_img.prop('src');
 
-    {block:Permalink}
-      var $hero_img = $('.post img.hero').length ? $('.post img.hero') : $('.post img');
-      var hero_src = $hero_img.prop('src');
-
-      if (hero_src) {
-        $header_background.css('background', "linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url('" + hero_src + "') center / cover");
-      }
-    {/block:Permalink}
+        if (hero_src) {
+          $header.add($header_background).css('background', "url('" + hero_src + "') center / cover");
+        }
+      {/block:Permalink}
+    });
   </script>
 </body>
 </html>
