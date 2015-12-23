@@ -3,7 +3,7 @@
 <head>
   {MobileAppHeaders}
   <meta charset="utf-8">
-  <title>{Title}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
+  <title>{Title}{block:TagPage} - {lang:Posts tagged Tag}{/block:TagPage}{block:SearchPage} ({lang:Search results for SearchQuery}){/block:SearchPage}{block:PermalinkPage}{block:PostSummary} — {PostSummary}{/block:PostSummary}{/block:PermalinkPage}</title>
   {block:Description}
   <meta name="description" content="{MetaDescription}">
   {/block:Description}
@@ -78,7 +78,7 @@
       position: relative;
       width: 100%;
       height: 100%;
-      z-index: 100;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -228,6 +228,10 @@
       height: 100%;
     }
 
+    .iframe-controls--desktop {
+      top: 50px !important;
+    }
+
     {CustomCSS}
   </style>
 </head>
@@ -268,7 +272,7 @@
         {block:TagPage}
           <div class="container tag-page">
             <h1 class="text-capitalize"><a href="{TagURL}">{Tag}</a></h1>
-            <p class="description">{lang:Posts tagged Tag 3}</p>{/block:Description}
+            <p class="description">{lang:TagResultCount posts tagged Tag 3}</p>{/block:Description}
           </div>
         {/block:TagPage}
         {block:PermalinkPage}
@@ -290,8 +294,6 @@
       </div>
       {/block:SearchPage}
 
-      {block:TagPage}<div class="result"><p>{lang:TagResultCount posts tagged Tag 3}</p></div>{/block:TagPage}
-
       {block:Posts inlineMediaWidth="700"}
       <article class="post {PostType} {TagsAsClasses}">
         {block:Text}
@@ -311,7 +313,7 @@
         {/block:Quote}
 
         {block:Link}
-          <h2><a href="{URL}" {Target}>{Name}</a></h2>
+          <h2><a href="{URL}" class="link-post" {Target}>{Name} <i class="fa fa-external-link"></i></a></h2>
           {block:Description}<div class="caption">{Description}</div>{/block:Description}
         {/block:Link}
 
@@ -398,16 +400,19 @@
               {/block:Tags}
           </p>
         {/block:HasTags}
-        <div class="post-meta">
-          {block:NoteCount}
-            <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
-          {/block:NoteCount}
-          <a href="{Permalink}">{TimeAgo}</a>
-          <span class="spacer"></span>
-          <a href="{Permalink}" title="Permalink"><i class="fa fa-link"></i></a>
-          {LikeButton color="grey"}
-          {ReblogButton color="grey"}
-        </div>
+
+        {block:Date}
+          <div class="post-meta">
+            {block:NoteCount}
+              <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
+            {/block:NoteCount}
+            <a href="{Permalink}">{TimeAgo}</a>
+            <span class="spacer"></span>
+            <a href="{Permalink}" title="Permalink"><i class="fa fa-link"></i></a>
+            {LikeButton color="grey"}
+            {ReblogButton color="grey"}
+          </div>
+        {/block:Date}
 
       </article>
       <hr>
@@ -428,7 +433,7 @@
           {block:PreviousPage}
             <li>
               <a href="{PreviousPage}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
+                <span aria-hidden="true">&laquo; {lang:Previous}</span>
               </a>
             </li>
           {/block:PreviousPage}
@@ -439,7 +444,7 @@
           {block:NextPage}
             <li>
               <a href="{NextPage}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
+                <span aria-hidden="true">{lang:Next} &raquo;</span>
               </a>
             </li>
           {/block:NextPage}
