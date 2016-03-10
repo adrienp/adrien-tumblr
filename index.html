@@ -232,6 +232,24 @@
       top: 50px !important;
     }
 
+    .share-menu-button {
+      background: none !important;
+      border: none;
+      padding: 0;
+      color: #ccc !important;
+      font-size: 20px;
+    }
+    .share-menu {
+      left: -70px;
+    }
+
+    .post-controls > div {
+      display: inline-block;
+      padding: 0 4px;
+      vertical-align: top;
+      height: 21px
+    }
+
     {CustomCSS}
   </style>
 </head>
@@ -314,6 +332,10 @@
 
         {block:Link}
           <h2><a href="{URL}" class="link-post" {Target}>{Name} <i class="fa fa-external-link"></i></a></h2>
+          {block:Excerpt}<h3>{Excerpt}</h3>{/block:Excerpt}
+          {block:Thumbnail}
+            <img src="{Thumbnail-HighRes}" alt="{Name}">
+          {/block:Thumbnail}
           {block:Description}<div class="caption">{Description}</div>{/block:Description}
         {/block:Link}
 
@@ -357,6 +379,9 @@
             <div class="video-player">
                 {Video-700}
             </div>
+            {block:VideoThumbnail}
+              <img src="{VideoThumbnailURL}" class="hidden">
+            {/block:VideoThumbnail}
             {block:Caption}<figcaption class="caption">{Caption}</figcaption>{/block:Caption}
           </figure>
         {/block:Video}
@@ -393,24 +418,82 @@
           <div class="replies">{Replies}</div>
         {/block:Answer}
 
-        {block:HasTags}
-          <p class="post-tags">
-              {block:Tags}
-                <a href="{TagURL}">#{Tag}</a>
-              {/block:Tags}
-          </p>
-        {/block:HasTags}
+        <p class="post-tags">
+          {block:ContentSource}
+            <a href="{SourceURL}">{lang:Source}: {SourceTitle}</a>
+          {/block:ContentSource}
+          {block:HasTags}
+            {block:Tags}
+              <a href="{TagURL}">#{Tag}</a>
+            {/block:Tags}
+          {/block:HasTags}
+        </p>
 
         {block:Date}
           <div class="post-meta">
-            {block:NoteCount}
-              <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
-            {/block:NoteCount}
-            <a href="{Permalink}">{TimeAgo}</a>
-            <span class="spacer"></span>
+            <div class="post-info">
+              {block:NoteCount}
+                <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
+              {/block:NoteCount}
+              <a href="{Permalink}">{TimeAgo}</a>
+            </div>
+            <div class="post-controls pull-right">
+              <div class="dropup">
+                <button class="btn btn-default dropdown-toggle share-menu-button" type="button" id="share-menu-{PostID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-share-alt"></i>
+                  <span class="sr-only">Share</span>
+                </button>
+                <ul class="dropdown-menu share-menu" aria-labelledby="share-menu-{PostID}">
+                  <!-- <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Separated link</a></li> -->
+
+                  <li class="open-in-app"><a href="#" class="share-item open-in-app" data-post="{PostID}">{lang:Open in app}</a></li>
+                  <li><a href="http://facebook.com/sharer.php?u={URLEncodedPermalink}&amp;t={URLEncodedTitle}" class="share-item facebook" target="_blank">{lang:Facebook}</a></li>
+                  <li><a href="https://twitter.com/intent/tweet?text={URLEncodedTweetSummary}" class="share-item twitter" target="_blank">{lang:Tweet}</a></li>
+                  {block:Photo}
+                      <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={PhotoURL-500}" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
+                  {/block:Photo}
+                  {block:Video}{block:VideoThumbnail}
+                      <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={VideoThumbnailURL}&amp;is_video=true" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
+                  {/block:VideoThumbnail}{/block:Video}
+                  <li><a href="https://reddit.com/submit?url={URLEncodedPermalink}" class="share-item reddit" target="_blank">{lang:Reddit}</a></li>
+                  <li><a href="mailto:?subject={URLEncodedShareString}&amp;body={URLEncodedMailSummary}" class="share-item mail">{lang:Mail}</a></li>
+                  <li><a href="{EmbedUrl}" class="share-item permalink">{lang:Embed}</a></li>
+                  <li><a href="{Permalink}" class="share-item permalink">{lang:Permalink} <i class="fa fa-angle-right"></i></a></li>
+                </ul>
+              </div>
+              <!-- <div class="control share-control">
+                <nav class="pop">
+                  <a href="#" class="share selector icon-export"></a>
+                  <div class="pop-menu share-menu south" id="share_{PostID}">
+                    <ul>
+                      <li class="open-in-app"><a href="#" class="share-item open-in-app" data-post="{PostID}">{lang:Open in app}</a></li>
+                      <li><a href="http://facebook.com/sharer.php?u={URLEncodedPermalink}&amp;t={URLEncodedTitle}" class="share-item facebook" target="_blank">{lang:Facebook}</a></li>
+                      <li><a href="https://twitter.com/intent/tweet?text={URLEncodedTweetSummary}" class="share-item twitter" target="_blank">{lang:Tweet}</a></li>
+                      {block:Photo}
+                          <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={PhotoURL-500}" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
+                      {/block:Photo}
+                      {block:Video}{block:VideoThumbnail}
+                          <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={VideoThumbnailURL}&amp;is_video=true" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
+                      {/block:VideoThumbnail}{/block:Video}
+                      <li><a href="https://reddit.com/submit?url={URLEncodedPermalink}" class="share-item reddit" target="_blank">{lang:Reddit}</a></li>
+                      <li><a href="mailto:?subject={URLEncodedShareString}&amp;body={URLEncodedMailSummary}" class="share-item mail">{lang:Mail}</a></li>
+                      <li><a href="{EmbedUrl}" class="share-item permalink">{lang:Embed}</a></li>
+                      <li><a href="{Permalink}" class="share-item permalink">{lang:Permalink} <i class="icon-arrow_carrot_right"></i></a></li>
+                    </ul>
+                  </div>
+                </nav>
+              </div> -->
+              <div class="control reblog-control">{ReblogButton color="grey" size="21"}</div>
+              <div class="control like-control">{LikeButton color="grey" size="20"}</div>
+            </div>
+            <!-- <span class="spacer"></span>
             <a href="{Permalink}" title="Permalink"><i class="fa fa-link"></i></a>
             {LikeButton color="grey"}
-            {ReblogButton color="grey"}
+            {ReblogButton color="grey"} -->
           </div>
         {/block:Date}
 
@@ -503,7 +586,7 @@
         var hero_src = $hero_img.prop('src');
 
         if (hero_src) {
-          $header.add($header_background).css('background', "url('" + hero_src + "') center / cover");
+          $header.add($header_background).css('background', "url('" + hero_src + "') 50% 30% / cover");
         }
       {/block:Permalink}
     });
