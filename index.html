@@ -20,6 +20,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
   <style type="text/css">
     html, body {
       height: 100%;
@@ -232,22 +233,16 @@
       top: 50px !important;
     }
 
-    .share-menu-button {
-      background: none !important;
-      border: none;
-      padding: 0;
-      color: #ccc !important;
-      font-size: 20px;
-    }
-    .share-menu {
-      left: -70px;
+    /* Upcoming show calendar */
+    #show-calendar {
+      height: 420px;
+      width: 100%;
     }
 
-    .post-controls > div {
-      display: inline-block;
-      padding: 0 4px;
-      vertical-align: top;
-      height: 21px
+    @media (max-width: 767px) {
+      #show-calendar {
+        height: 240px;
+      }
     }
 
     {CustomCSS}
@@ -303,7 +298,7 @@
   </header>
 
   <main role="main" class="content container">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+    <div class="col-md-9">
 
       {block:SearchPage}
       <div class="result">
@@ -418,82 +413,27 @@
           <div class="replies">{Replies}</div>
         {/block:Answer}
 
-        <p class="post-tags">
-          {block:ContentSource}
-            <a href="{SourceURL}">{lang:Source}: {SourceTitle}</a>
-          {/block:ContentSource}
-          {block:HasTags}
+        {block:HasTags}
+          <p class="post-tags">
+            {block:ContentSource}
+              <a href="{SourceURL}">{lang:Source}: {SourceTitle}</a>
+            {/block:ContentSource}
             {block:Tags}
               <a href="{TagURL}">#{Tag}</a>
             {/block:Tags}
-          {/block:HasTags}
-        </p>
+          </p>
+        {/block:HasTags}
 
         {block:Date}
           <div class="post-meta">
-            <div class="post-info">
-              {block:NoteCount}
-                <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
-              {/block:NoteCount}
-              <a href="{Permalink}">{TimeAgo}</a>
-            </div>
-            <div class="post-controls pull-right">
-              <div class="dropup">
-                <button class="btn btn-default dropdown-toggle share-menu-button" type="button" id="share-menu-{PostID}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-share-alt"></i>
-                  <span class="sr-only">Share</span>
-                </button>
-                <ul class="dropdown-menu share-menu" aria-labelledby="share-menu-{PostID}">
-                  <!-- <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li> -->
-
-                  <li class="open-in-app"><a href="#" class="share-item open-in-app" data-post="{PostID}">{lang:Open in app}</a></li>
-                  <li><a href="http://facebook.com/sharer.php?u={URLEncodedPermalink}&amp;t={URLEncodedTitle}" class="share-item facebook" target="_blank">{lang:Facebook}</a></li>
-                  <li><a href="https://twitter.com/intent/tweet?text={URLEncodedTweetSummary}" class="share-item twitter" target="_blank">{lang:Tweet}</a></li>
-                  {block:Photo}
-                      <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={PhotoURL-500}" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
-                  {/block:Photo}
-                  {block:Video}{block:VideoThumbnail}
-                      <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={VideoThumbnailURL}&amp;is_video=true" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
-                  {/block:VideoThumbnail}{/block:Video}
-                  <li><a href="https://reddit.com/submit?url={URLEncodedPermalink}" class="share-item reddit" target="_blank">{lang:Reddit}</a></li>
-                  <li><a href="mailto:?subject={URLEncodedShareString}&amp;body={URLEncodedMailSummary}" class="share-item mail">{lang:Mail}</a></li>
-                  <li><a href="{EmbedUrl}" class="share-item permalink">{lang:Embed}</a></li>
-                  <li><a href="{Permalink}" class="share-item permalink">{lang:Permalink} <i class="fa fa-angle-right"></i></a></li>
-                </ul>
-              </div>
-              <!-- <div class="control share-control">
-                <nav class="pop">
-                  <a href="#" class="share selector icon-export"></a>
-                  <div class="pop-menu share-menu south" id="share_{PostID}">
-                    <ul>
-                      <li class="open-in-app"><a href="#" class="share-item open-in-app" data-post="{PostID}">{lang:Open in app}</a></li>
-                      <li><a href="http://facebook.com/sharer.php?u={URLEncodedPermalink}&amp;t={URLEncodedTitle}" class="share-item facebook" target="_blank">{lang:Facebook}</a></li>
-                      <li><a href="https://twitter.com/intent/tweet?text={URLEncodedTweetSummary}" class="share-item twitter" target="_blank">{lang:Tweet}</a></li>
-                      {block:Photo}
-                          <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={PhotoURL-500}" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
-                      {/block:Photo}
-                      {block:Video}{block:VideoThumbnail}
-                          <li><a href="//www.pinterest.com/pin/create/button/?url={URLEncodedPermalink}&amp;media={VideoThumbnailURL}&amp;is_video=true" class="share-item pinterest" target="_blank">{lang:Pinterest}</a></li>
-                      {/block:VideoThumbnail}{/block:Video}
-                      <li><a href="https://reddit.com/submit?url={URLEncodedPermalink}" class="share-item reddit" target="_blank">{lang:Reddit}</a></li>
-                      <li><a href="mailto:?subject={URLEncodedShareString}&amp;body={URLEncodedMailSummary}" class="share-item mail">{lang:Mail}</a></li>
-                      <li><a href="{EmbedUrl}" class="share-item permalink">{lang:Embed}</a></li>
-                      <li><a href="{Permalink}" class="share-item permalink">{lang:Permalink} <i class="icon-arrow_carrot_right"></i></a></li>
-                    </ul>
-                  </div>
-                </nav>
-              </div> -->
-              <div class="control reblog-control">{ReblogButton color="grey" size="21"}</div>
-              <div class="control like-control">{LikeButton color="grey" size="20"}</div>
-            </div>
-            <!-- <span class="spacer"></span>
+            {block:NoteCount}
+              <a href="{Permalink}#notes"><strong>{NoteCountWithLabel}</strong></a>
+            {/block:NoteCount}
+            <a href="{Permalink}">{TimeAgo}</a>
+            <span class="spacer"></span>
             <a href="{Permalink}" title="Permalink"><i class="fa fa-link"></i></a>
             {LikeButton color="grey"}
-            {ReblogButton color="grey"} -->
+            {ReblogButton color="grey"}
           </div>
         {/block:Date}
 
@@ -534,6 +474,32 @@
         </ul>
       </nav>
       {/block:Pagination}
+    </div>
+    <div class="col-md-3">
+      <h3>Upcoming shows</h3>
+      <iframe id="show-calendar" src="https://calendar.google.com/calendar/embed?showTitle=0&amp;showNav=0&amp;showDate=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0&amp;mode=AGENDA&amp;wkst=1&amp;bgcolor=%23FFFFFF&amp;src=f6uembbhnauauu3piohjuprv8k%40group.calendar.google.com&amp;color=%23A32929&amp;ctz=America%2FNew_York" style="border-width:0;" frameborder="0" scrolling="no"></iframe>
+      <h3>Get emails!</h3>
+      <p>I'll send you occasional updates about shows I'm working on.</p>
+      <!-- Begin MailChimp Signup Form -->
+      <div id="mc_embed_signup">
+      <form action="//adrienpellerin.us10.list-manage.com/subscribe/post?u=1f6c52a11230ecb814f20c08d&amp;id=68331ecf6f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+          <div id="mc_embed_signup_scroll">
+
+      <div class="mc-field-group">
+      	<label for="mce-EMAIL">Email Address </label>
+      	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+      </div>
+      	<div id="mce-responses" class="clear">
+      		<div class="response" id="mce-error-response" style="display:none"></div>
+      		<div class="response" id="mce-success-response" style="display:none"></div>
+      	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+          <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1f6c52a11230ecb814f20c08d_68331ecf6f" tabindex="-1" value=""></div>
+          <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button btn btn-primary"></div>
+          </div>
+      </form>
+      </div>
+      <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[5]='MMERGE5';ftypes[5]='phone';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+      <!--End mc_embed_signup-->
     </div>
   </main>
   <footer class="footer text-muted text-center">
